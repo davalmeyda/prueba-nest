@@ -62,16 +62,14 @@ export class TasksService {
 
     this.tasks.forEach(async (task) => {
       if (task.dueDate) {
-        const dateObj = new Date(task.dueDate);
-        const yyyy = dateObj.getFullYear();
-        const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
-        const dd = String(dateObj.getDate()).padStart(2, '0');
-        const formattedDate = `${yyyy}-${mm}-${dd}`;
+        const formattedDate = new Date(task.dueDate)
+          .toISOString()
+          .split('T')[0];
 
         const response = await fetch(
           `${process.env.API_EXTERNA}/task/check/?fecha=${formattedDate}`,
         );
-        const data = await response.json();
+        const data = (await response.json()) as { vencida: boolean };
         if (data.vencida) {
           overdueTasks.push(task);
         }

@@ -1,98 +1,124 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Prueba Técnica - Debugging Simple
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Para el Candidato
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+### 🎯 Objetivo
+Identificar y corregir 3 errores simples en un sistema básico de tareas implementado en NestJS.
 
-## Description
+### ⏱️ Tiempo estimado
+15-30 minutos
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
+### 🚀 Inicio Rápido
 
 ```bash
-$ pnpm install
+# Instalar dependencias
+pnpm install
+
+# Ejecutar el proyecto
+pnpm start:dev
 ```
 
-## Compile and run the project
+El servidor estará en `http://localhost:3000`
+
+### 📋 Endpoints
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| POST | `/tasks` | Crear tarea |
+| GET | `/tasks` | Listar todas las tareas |
+| GET | `/tasks/overdue` | Obtener tareas vencidas |
+| GET | `/tasks/priority/:priority` | Obtener tareas por prioridad |
+| GET | `/tasks/:id` | Obtener tarea por ID |
+| PUT | `/tasks/:id` | Actualizar tarea |
+| DELETE | `/tasks/:id` | Eliminar tarea |
+
+### 🐛 Tu Tarea
+
+1. **Ejecuta los tests** - `pnpm test` y `pnpm test:e2e` (algunos fallarán)
+2. **Prueba el sistema** - Crea tareas y prueba todos los endpoints
+3. **Encuentra los errores** - ¿Qué no funciona como debería?
+4. **Corrige los errores** - Revisa el código y arregla los problemas
+5. **Verifica** - Los tests deben pasar después de tus correcciones
+6. **Documenta** - Crea `SOLUCION.md` con lo que encontraste
+
+### 📝 Ejemplo de Uso
 
 ```bash
-# development
-$ pnpm run start
+# Crear tarea
+curl -X POST http://localhost:3000/tasks \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Mi tarea", "priority": "medium", "dueDate": "2024-01-01T00:00:00Z"}'
 
-# watch mode
-$ pnpm run start:dev
+# Obtener tareas vencidas
+curl http://localhost:3000/tasks/overdue
 
-# production mode
-$ pnpm run start:prod
+# Obtener tareas por prioridad
+curl http://localhost:3000/tasks/priority/high
 ```
 
-## Run tests
+### ⚠️ Reglas
+- NO modifiques la estructura de archivos
+- Mantén el código simple
+- Los tests deben pasar después de tus correcciones
+- Documenta tus cambios
 
-```bash
-# unit tests
-$ pnpm run test
+---
 
-# e2e tests
-$ pnpm run test:e2e
+## Para el Evaluador
 
-# test coverage
-$ pnpm run test:cov
-```
+### 🐛 Errores Introducidos
 
-## Deployment
+#### 1. Validación de título incorrecta (DTO)
+**Ubicación:** `src/tasks/dto/create-task.dto.ts`
+**Problema:** El título usa `@IsOptional()` en lugar de `@IsNotEmpty()`
+**Impacto:** Se pueden crear tareas sin título
+**Solución:** Cambiar `@IsOptional()` por `@IsNotEmpty()`
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+#### 2. Filtro de prioridad invertido (Servicio)
+**Ubicación:** `src/tasks/tasks.service.ts` - método `getTasksByPriority`
+**Problema:** Usa `!==` en lugar de `===`
+**Impacto:** Devuelve tareas que NO tienen la prioridad especificada
+**Solución:** Cambiar `task.priority !== priority` por `task.priority === priority`
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+#### 3. Uso incorrecto de forEach con async/await (Servicio)
+**Ubicación:** `src/tasks/tasks.service.ts` - método `getOverdueTasks`
+**Problema:** Usa `forEach` con funciones `async`, pero no espera las verificaciones asíncronas
+**Impacto:** El método retorna inmediatamente sin esperar las verificaciones, resultando en un array vacío aunque haya tareas vencidas
+**Solución:** Reemplazar `forEach` con `for...of` o usar `Promise.all()` con `map()` para esperar todas las verificaciones asíncronas
 
-```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
-```
+### 📊 Criterios de Evaluación
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+#### Excelente (90-100%)
+- Encuentra los 3 errores
+- Los corrige correctamente
+- Todos los tests pasan
+- Documenta claramente lo que hizo
 
-## Resources
+#### Bueno (70-89%)
+- Encuentra al menos 2 errores
+- Los corrige correctamente
+- La mayoría de tests pasan
+- Documenta su trabajo
 
-Check out a few resources that may come in handy when working with NestJS:
+#### Insuficiente (<70%)
+- Encuentra menos de 2 errores
+- Las correcciones no funcionan
+- Los tests siguen fallando
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### 🧪 Tests
 
-## Support
+Los tests están diseñados para **fallar** hasta que se corrijan los errores:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- **Test unitarios** (`pnpm test`): Verifican la lógica del servicio
+- **Test e2e** (`pnpm test:e2e`): Verifican la validación del DTO y endpoints
 
-## Stay in touch
+### ⏱️ Tiempo Esperado
+- **Lectura y comprensión**: 5 minutos
+- **Ejecución de tests y pruebas**: 5-10 minutos  
+- **Identificación de errores**: 5-10 minutos
+- **Corrección**: 5-10 minutos
+- **Verificación y documentación**: 5 minutos
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+**Total**: 15-30 minutos
 
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+¡Buena suerte! 🚀 

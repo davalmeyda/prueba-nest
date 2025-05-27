@@ -60,17 +60,19 @@ export class TasksService {
   getOverdueTasks(): Task[] {
     const overdueTasks: Task[] = [];
 
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.tasks.forEach(async (task) => {
-      // Verificar si la tarea está vencida
       if (task.dueDate) {
-        const now = new Date();
-        const dueDate = new Date(task.dueDate);
+        const dateObj = new Date(task.dueDate);
+        const yyyy = dateObj.getFullYear();
+        const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const dd = String(dateObj.getDate()).padStart(2, '0');
+        const formattedDate = `${yyyy}-${mm}-${dd}`;
 
-        // Simular una verificación asíncrona (como consultar una API externa)
-        await new Promise((resolve) => setTimeout(resolve, 5));
-
-        if (now > dueDate) {
+        const response = await fetch(
+          `${process.env.API_EXTERNA}/task/check/?fecha=${formattedDate}`,
+        );
+        const data = await response.json();
+        if (data.vencida) {
           overdueTasks.push(task);
         }
       }

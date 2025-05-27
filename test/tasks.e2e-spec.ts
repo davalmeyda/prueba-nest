@@ -108,7 +108,6 @@ describe('TasksController (e2e)', () => {
       expect(overdueResponse.status).toBe(200);
       expect(Array.isArray(overdueResponse.body)).toBe(true);
 
-      // Este test fallará porque forEach con async/await no espera las verificaciones
       expect((overdueResponse.body as any[]).length).toBe(1); // Debería haber 1 tarea vencida
 
       if ((overdueResponse.body as any[]).length > 0) {

@@ -63,15 +63,11 @@ describe('TasksController (e2e)', () => {
         .send({ title: 'Medium Task', priority: 'medium' });
 
       // Obtener tareas de prioridad alta
-      const response = await request(app.getHttpServer()).get(
-        '/tasks/priority/high',
-      );
+      const response = await request(app.getHttpServer()).get('/tasks/priority/high');
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveLength(1);
-      expect(Array.isArray(response.body) && response.body.length > 0).toBe(
-        true,
-      );
+      expect(Array.isArray(response.body) && response.body.length > 0).toBe(true);
       if (Array.isArray(response.body) && response.body.length > 0) {
         expect(response.body[0]).toHaveProperty('priority', 'high');
       }
@@ -107,9 +103,7 @@ describe('TasksController (e2e)', () => {
       });
 
       // Obtener tareas vencidas
-      const overdueResponse = await request(app.getHttpServer()).get(
-        '/tasks/overdue',
-      );
+      const overdueResponse = await request(app.getHttpServer()).get('/tasks/overdue');
 
       expect(overdueResponse.status).toBe(200);
       expect(Array.isArray(overdueResponse.body)).toBe(true);
@@ -118,10 +112,7 @@ describe('TasksController (e2e)', () => {
       expect((overdueResponse.body as any[]).length).toBe(1); // Debería haber 1 tarea vencida
 
       if ((overdueResponse.body as any[]).length > 0) {
-        expect((overdueResponse.body as any[])[0]).toHaveProperty(
-          'title',
-          'Overdue Task',
-        );
+        expect((overdueResponse.body as any[])[0]).toHaveProperty('title', 'Overdue Task');
       }
     });
   });

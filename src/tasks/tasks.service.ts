@@ -15,7 +15,7 @@ export class TasksService {
   }
 
   findOne(id: string): Task {
-    const task = this.tasks.find((task) => task.id === id);
+    const task = this.tasks.find(task => task.id === id);
     if (!task) {
       throw new NotFoundException(`Task with ID ${id} not found`);
     }
@@ -46,7 +46,7 @@ export class TasksService {
   }
 
   remove(id: string): void {
-    const taskIndex = this.tasks.findIndex((task) => task.id === id);
+    const taskIndex = this.tasks.findIndex(task => task.id === id);
     if (taskIndex === -1) {
       throw new NotFoundException(`Task with ID ${id} not found`);
     }
@@ -54,17 +54,15 @@ export class TasksService {
   }
 
   getTasksByPriority(priority: TaskPriority): Task[] {
-    return this.tasks.filter((task) => task.priority !== priority);
+    return this.tasks.filter(task => task.priority !== priority);
   }
 
   getOverdueTasks(): Task[] {
     const overdueTasks: Task[] = [];
 
-    this.tasks.forEach(async (task) => {
+    this.tasks.forEach(async task => {
       if (task.dueDate) {
-        const formattedDate = new Date(task.dueDate)
-          .toISOString()
-          .split('T')[0];
+        const formattedDate = new Date(task.dueDate).toISOString().split('T')[0];
 
         const response = await fetch(
           `${process.env.API_EXTERNA}/task/check/?fecha=${formattedDate}`,

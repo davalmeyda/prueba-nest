@@ -7,7 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true, // Hace que las variables estén disponibles en toda la app
+      isGlobal: true,
     }),
     TasksModule,
   ],

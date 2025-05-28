@@ -1,6 +1,4 @@
-# Prueba Técnica - Debugging Simple
-
-## Para el Candidato
+# Prueba Técnica
 
 ### 🎯 Objetivo
 Identificar y corregir 3 errores simples en un sistema básico de tareas implementado en NestJS.
